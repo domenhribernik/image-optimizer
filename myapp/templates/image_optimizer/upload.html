@@ -195,7 +195,7 @@
 <body>
     <div class="image-optimizer-container">
         <h1>Image Optimizer</h1>
-        <p>Upload images to optimize them for web use. Supports PNG, WEBP, AVIF, and other formats.</p>
+        <p>Upload images to optimize them for web use. Supports PNG, JPG, GIF and WEBP</p>
         
         <form id="optimizeForm" enctype="multipart/form-data">
             {% csrf_token %}
@@ -208,7 +208,10 @@
                 </div>
                 <div class="selected-files" id="selectedFiles"></div>
             </div>
-            
+            <div>
+                <label for="image-name">Name of the images</label>
+                <input type="text" id="image_name" name="image_name" placeholder="Enter a name for the images" required>
+            </div>
             <div class="options">
                 <div class="form-group">
                     <label for="max_size">Max Width/Height (px):</label>
@@ -252,12 +255,10 @@
         const processingStatus = document.getElementById('processingStatus');
         const status = document.getElementById('status');
 
-        // Get CSRF token
         function getCSRFToken() {
             return document.querySelector('[name=csrfmiddlewaretoken]').value;
         }
 
-        // Prevent default drag behaviors
         ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
             document.addEventListener(eventName, preventDefaults, false);
         });
@@ -267,9 +268,7 @@
             e.stopPropagation();
         }
 
-        // Drag and drop functionality
         dragDropArea.addEventListener('click', (e) => {
-            e.preventDefault();
             fileInput.click();
         });
         
@@ -303,7 +302,6 @@
             
             for (let file of files) {
                 if (file.type.startsWith('image/')) {
-                    // Check if file already exists
                     if (!selectedFiles.some(f => f.name === file.name && f.size === file.size)) {
                         selectedFiles.push(file);
                         console.log('Added file:', file.name);
@@ -354,6 +352,7 @@
             }
 
             const maxSize = document.getElementById('max_size').value;
+            const imageName = document.getElementById('image_name').value.trim() || 'optimized_image';
             const quality = document.getElementById('quality').value;
             const setDpi = document.getElementById('set_dpi').checked ? 'true' : 'false';
             const stripExif = document.getElementById('strip_exif').checked ? 'true' : 'false';
@@ -406,18 +405,22 @@
                     console.log('Response status:', response.status);
 
                     if (response.ok) {
+                        const fileName = imageName + "-" +(i + 1);
                         const blob = await response.blob();
                         console.log('Received blob of size:', blob.size);
                         
                         // Update progress to 100%
                         document.querySelector(`#${progressId} .progress-fill`).style.width = '100%';
-                        document.querySelector(`#${progressId} div`).innerHTML = `<strong>${file.name}</strong> - ✅ Complete`;
+                        const originalSize = file.size;
+                        const optimizedSize = blob.size;
+                        const bytesSaved = originalSize - optimizedSize;
+                        const percentSaved = originalSize > 0 ? (bytesSaved / originalSize) * 100 : 0;
+                        document.querySelector(`#${progressId} div`).innerHTML = `<strong>${fileName}</strong> - ✅ Complete <span style="color: #007bff;">(${percentSaved}% reduced)</span>`;
 
                         // Create download link
                         const url = window.URL.createObjectURL(blob);
                         const a = document.createElement('a');
                         a.href = url;
-                        const fileName = file.name.split('.')[0] + '_optimized.jpg';
                         a.download = fileName;
                         document.body.appendChild(a);
                         a.click();
