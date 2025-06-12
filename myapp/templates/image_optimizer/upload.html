@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Image Optimizer</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,7 +11,7 @@
             margin: 0;
             padding: 20px;
         }
-        
+
         .image-optimizer-container {
             max-width: 80%;
             margin: 50px auto;
@@ -20,40 +21,40 @@
             box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
             text-align: center;
         }
-        
+
         .image-optimizer-container h1 {
             color: #333;
             margin-bottom: 10px;
         }
-        
+
         .image-optimizer-container p {
             color: #666;
             margin-bottom: 20px;
         }
-        
+
         .image-optimizer-container .form-group {
             margin-bottom: 20px;
             text-align: left;
         }
-        
+
         .image-optimizer-container label {
             display: block;
             margin-bottom: 8px;
             font-weight: bold;
             color: #333;
         }
-        
+
         .image-optimizer-container input[type="number"] {
             width: 100px;
             padding: 8px;
             border: 1px solid #ddd;
             border-radius: 4px;
         }
-        
+
         .image-optimizer-container input[type="checkbox"] {
             margin-right: 8px;
         }
-        
+
         .image-optimizer-container button {
             display: block;
             width: 80%;
@@ -67,16 +68,16 @@
             cursor: pointer;
             transition: background 0.3s;
         }
-        
+
         .image-optimizer-container button:hover {
             background: #0056b3;
         }
-        
+
         .image-optimizer-container button:disabled {
             background: #6c757d;
             cursor: not-allowed;
         }
-        
+
         .image-optimizer-container .drag-drop-area {
             border: 2px dashed #007bff;
             border-radius: 8px;
@@ -86,23 +87,23 @@
             transition: all 0.3s ease;
             margin-bottom: 15px;
         }
-        
+
         .image-optimizer-container .drag-drop-area:hover,
         .image-optimizer-container .drag-drop-area.drag-over {
             background: #e3f2fd;
             border-color: #0056b3;
             transform: scale(1.02);
         }
-        
+
         .image-optimizer-container .file-input {
             display: none;
         }
-        
+
         .image-optimizer-container .selected-files {
             margin-top: 15px;
             text-align: left;
         }
-        
+
         .image-optimizer-container .file-item {
             background: #e9ecef;
             padding: 12px;
@@ -112,7 +113,7 @@
             justify-content: space-between;
             align-items: center;
         }
-        
+
         .image-optimizer-container .remove-file {
             background: #dc3545;
             color: white;
@@ -124,11 +125,11 @@
             width: auto;
             margin: 0;
         }
-        
+
         .image-optimizer-container .remove-file:hover {
             background: #c82333;
         }
-        
+
         .image-optimizer-container .options {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -136,21 +137,21 @@
             margin: 20px 0;
             text-align: left;
         }
-        
+
         .image-optimizer-container .checkbox-group {
             display: flex;
             align-items: center;
         }
-        
+
         .image-optimizer-container .checkbox-group label {
             margin-bottom: 0;
         }
-        
+
         .image-optimizer-container .processing-status {
             margin-top: 20px;
             text-align: left;
         }
-        
+
         .image-optimizer-container .file-progress {
             background: #f8f9fa;
             border: 1px solid #dee2e6;
@@ -158,7 +159,7 @@
             padding: 10px;
             margin: 8px 0;
         }
-        
+
         .image-optimizer-container .progress-bar {
             width: 100%;
             height: 8px;
@@ -167,24 +168,24 @@
             overflow: hidden;
             margin-top: 5px;
         }
-        
+
         .image-optimizer-container .progress-fill {
             height: 100%;
             background: #28a745;
             transition: width 0.3s ease;
         }
-        
+
         .image-optimizer-container #status {
             margin-top: 20px;
         }
-        
+
         @media (max-width: 768px) {
             .image-optimizer-container {
                 max-width: 95%;
                 margin: 20px auto;
                 padding: 15px;
             }
-            
+
             .image-optimizer-container .options {
                 grid-template-columns: 1fr;
                 gap: 15px;
@@ -192,11 +193,12 @@
         }
     </style>
 </head>
+
 <body>
     <div class="image-optimizer-container">
         <h1>Image Optimizer</h1>
         <p>Upload images to optimize them for web use. Supports PNG, JPG, GIF and WEBP</p>
-        
+
         <form id="optimizeForm" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="form-group">
@@ -208,28 +210,28 @@
                 </div>
                 <div class="selected-files" id="selectedFiles"></div>
             </div>
-            <div>
-                <label for="image-name">Name of the images</label>
-                <input type="text" id="image_name" name="image_name" placeholder="Enter a name for the images" required>
-            </div>
             <div class="options">
+                <div>
+                    <label for="image-name">Name of the images</label>
+                    <input type="text" id="image_name" name="image_name" placeholder="Empty for current name">
+                </div>
                 <div class="form-group">
                     <label for="max_size">Max Width/Height (px):</label>
                     <input type="number" id="max_size" name="max_size" value="1280" min="100" max="4000">
                 </div>
-                
+
                 <div class="form-group">
                     <label for="quality">JPEG Quality (%):</label>
                     <input type="number" id="quality" name="quality" value="85" min="10" max="100">
                 </div>
-                
+
                 <div class="form-group">
                     <div class="checkbox-group">
                         <input type="checkbox" id="set_dpi" name="set_dpi" checked>
                         <label for="set_dpi">Set DPI to 72</label>
                     </div>
                 </div>
-                
+
                 <div class="form-group">
                     <div class="checkbox-group">
                         <input type="checkbox" id="strip_exif" name="strip_exif" checked>
@@ -237,17 +239,17 @@
                     </div>
                 </div>
             </div>
-            
+
             <button type="submit" id="optimizeBtn" disabled>Optimize & Download All</button>
         </form>
-        
+
         <div class="processing-status" id="processingStatus"></div>
         <div id="status"></div>
     </div>
 
     <script>
         let selectedFiles = [];
-        
+
         const dragDropArea = document.getElementById('dragDropArea');
         const fileInput = document.getElementById('images');
         const selectedFilesDiv = document.getElementById('selectedFiles');
@@ -271,15 +273,15 @@
         dragDropArea.addEventListener('click', (e) => {
             fileInput.click();
         });
-        
+
         ['dragenter', 'dragover'].forEach(eventName => {
             dragDropArea.addEventListener(eventName, highlight, false);
         });
-        
+
         ['dragleave', 'drop'].forEach(eventName => {
             dragDropArea.addEventListener(eventName, unhighlight, false);
         });
-        
+
         dragDropArea.addEventListener('drop', handleDrop, false);
         fileInput.addEventListener('change', (e) => handleFiles(e.target.files));
 
@@ -299,7 +301,7 @@
 
         function handleFiles(files) {
             console.log('Handling files:', files.length);
-            
+
             for (let file of files) {
                 if (file.type.startsWith('image/')) {
                     if (!selectedFiles.some(f => f.name === file.name && f.size === file.size)) {
@@ -315,7 +317,7 @@
 
         function updateSelectedFiles() {
             console.log('Updating selected files. Count:', selectedFiles.length);
-            
+
             if (selectedFiles.length === 0) {
                 selectedFilesDiv.innerHTML = '';
                 optimizeBtn.disabled = true;
@@ -341,24 +343,24 @@
         }
 
         // Form submission
-        document.getElementById('optimizeForm').addEventListener('submit', async function(e) {
+        document.getElementById('optimizeForm').addEventListener('submit', async function (e) {
             e.preventDefault();
-            
+
             console.log('Form submitted. Selected files:', selectedFiles.length);
-            
+
             if (selectedFiles.length === 0) {
                 status.innerHTML = '<p style="color: red;">❌ Please select at least one image</p>';
                 return;
             }
 
             const maxSize = document.getElementById('max_size').value;
-            const imageName = document.getElementById('image_name').value.trim() || 'optimized_image';
+            const imageName = document.getElementById('image_name').value.trim();
             const quality = document.getElementById('quality').value;
             const setDpi = document.getElementById('set_dpi').checked ? 'true' : 'false';
             const stripExif = document.getElementById('strip_exif').checked ? 'true' : 'false';
-            
+
             console.log('Settings:', { maxSize, quality, setDpi, stripExif });
-            
+
             optimizeBtn.disabled = true;
             optimizeBtn.textContent = 'Processing...';
             processingStatus.innerHTML = '';
@@ -370,9 +372,9 @@
             for (let i = 0; i < selectedFiles.length; i++) {
                 const file = selectedFiles[i];
                 const progressId = `progress-${i}`;
-                
+
                 console.log(`Processing file ${i + 1}/${selectedFiles.length}: ${file.name}`);
-                
+
                 // Add progress indicator
                 processingStatus.innerHTML += `
                     <div class="file-progress" id="${progressId}">
@@ -405,10 +407,10 @@
                     console.log('Response status:', response.status);
 
                     if (response.ok) {
-                        const fileName = imageName + "-" +(i + 1);
+                        const fileName = imageName != "" ? imageName + "-" + (i != 0 ? (i + 1) : "") : file.name;
                         const blob = await response.blob();
                         console.log('Received blob of size:', blob.size);
-                        
+
                         // Update progress to 100%
                         document.querySelector(`#${progressId} .progress-fill`).style.width = '100%';
                         const originalSize = file.size;
@@ -431,7 +433,7 @@
                     } else {
                         const responseText = await response.text();
                         console.error('Error response:', responseText);
-                        
+
                         let errorMessage = 'Unknown error';
                         try {
                             const errorData = JSON.parse(responseText);
@@ -462,7 +464,7 @@
 
             optimizeBtn.disabled = false;
             optimizeBtn.textContent = 'Optimize & Download All';
-            
+
             console.log('Processing complete. Success:', successCount, 'Errors:', errorCount);
         });
 
@@ -471,4 +473,5 @@
         console.log('Image optimizer initialized');
     </script>
 </body>
+
 </html>
