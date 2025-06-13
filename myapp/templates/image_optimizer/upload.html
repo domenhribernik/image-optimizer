@@ -211,6 +211,12 @@
                 <div class="selected-files" id="selectedFiles"></div>
             </div>
             <div class="options">
+                <div class="form-group">
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="number_images" name="number_images" checked>
+                        <label for="number_images">Number images</label>
+                    </div>
+                </div>
                 <div>
                     <label for="image-name">Name of the images</label>
                     <input type="text" id="image_name" name="image_name" placeholder="Empty for current name">
@@ -354,6 +360,7 @@
             }
 
             const maxSize = document.getElementById('max_size').value;
+            const numberImages = document.getElementById('number_images').checked ? true : false;
             const imageName = document.getElementById('image_name').value.trim();
             const quality = document.getElementById('quality').value;
             const setDpi = document.getElementById('set_dpi').checked ? 'true' : 'false';
@@ -407,7 +414,7 @@
                     console.log('Response status:', response.status);
 
                     if (response.ok) {
-                        const fileName = imageName != "" ? imageName + "-" + (i != 0 ? (i + 1) : "") : file.name;
+                        const fileName = imageName != "" ? imageName + "-" + (numberImages ? (i + 1) : "") : file.name;
                         const blob = await response.blob();
                         console.log('Received blob of size:', blob.size);
 
@@ -417,7 +424,7 @@
                         const optimizedSize = blob.size;
                         const bytesSaved = originalSize - optimizedSize;
                         const percentSaved = originalSize > 0 ? (bytesSaved / originalSize) * 100 : 0;
-                        document.querySelector(`#${progressId} div`).innerHTML = `<strong>${fileName}</strong> - ✅ Complete <span style="color: #007bff;">(${percentSaved}% reduced)</span>`;
+                        document.querySelector(`#${progressId} div`).innerHTML = `<strong>${fileName}</strong> - ✅ Complete <span style="color: #007bff;">(${percentSaved.toFixed(2)}% reduced)</span>`;
 
                         // Create download link
                         const url = window.URL.createObjectURL(blob);
