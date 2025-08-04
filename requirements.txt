@@ -1,2 +1,4 @@
-Django
+Django>=3.2,<5.0
+Pillow>=8.0
+dotenv
 gunicorn
