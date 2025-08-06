@@ -6,10 +6,10 @@ services:
     ports:
       - "8001:8001"
     volumes:
-      - ./second_app:/app
+      - .:/app
     env_file:
       - .env
     command: >
       bash -c "python manage.py migrate --noinput &&
-               python manage.py collectstatic --noinput &&
-               gunicorn --workers=1 --bind 0.0.0.0:8001 second_app.wsgi:application"
+              python manage.py collectstatic --noinput &&
+              gunicorn --workers=1 --bind 0.0.0.0:8001 second_app.wsgi:application"
